@@ -1,0 +1,370 @@
+﻿@model IEnumerable<EmployeeApplication.Models.EmployeeModel>
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var index = 0;
+    var backcolor = "white";
+}
+
+<h2 style="background:black;color:white;text-align:center;">Employee Information</h2>
+
+<div class="text-right" style="padding-bottom:10px;">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EmployeeAddModal">
+        Add
+    </button>
+    
+</div>
+<table class="table">
+    <tr style="background-color:gray;color:white;">
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        index = index + 1;
+
+        if (index % 2 == 0)
+        {
+            backcolor= "lightblue";
+        }
+        else
+        {
+            backcolor = "white";
+        }
+
+
+        <tr style="background-color:@backcolor">
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary" onclick="GetEmployeeRecord(@item.EmployeeId)">
+                    Edit
+                </button>
+                <button type="button" class="btn btn-primary" onclick="DeleteEmployeeRecord(@item.EmployeeId)">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        }
+
+</table>
+<!-- Modal -->
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EmployeeAddModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="createemployee"><i><b>Create Employee</i></b></h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="empfirstname">First Name</label>
+                            <input type="text" class="form-control" id="empfname" aria-describedby="emailHelp" placeholder="Enter First Name">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="emplastname">Last Name</label>
+                            <input type="text" class="form-control" id="emplname" aria-describedby="emailHelp" placeholder="Enter Last Name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Department</label>
+                            <select class="form-control" id="empDept">                                
+                                <option>Software</option>
+                                <option>Hardware</option>
+                                <option>Office</option>
+                                <option>HR</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Address1</label>
+                            <input type="text" class="form-control" id="empaddr1" aria-describedby="emailHelp" placeholder="Enter the Address1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        @*<div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Address2</label>
+                            <input type="text" class="form-control" id="empaddr2" aria-describedby="emailHelp" placeholder="Enter the Address2">
+                        </div>*@
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">City</label>
+                            <input type="text" class="form-control" id="empcity" aria-describedby="emailHelp" placeholder="Enter the City">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">State</label>
+                            <input type="text" class="form-control" id="empstate" aria-describedby="emailHelp" placeholder="Enter the State">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Country</label>
+                            <select class="form-control" id="empcountry">
+                                <option value="India">India</option>
+                                <option value="USA">USA</option>
+                                <option value="UK">UK</option>
+                                <option value="aaa">aaa</option>
+                                <option value="bbb">bbbb</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-12 form-group">
+                            <label for="exampleInputPassword1">Phone</label>
+                            <input type="text" class="form-control" id="empphone" aria-describedby="emailHelp" placeholder="Enter the Phone">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-row">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="InsertEmployee()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="empid" name="empid">
+<script type="text/javascript">
+    function GetEmployeeRecord(id)
+    {
+        $('#EmployeeEditModal').modal('hide');
+        
+        $.ajax({
+            url: "../../Employee/Getemployee",
+            type: "GET",
+            data: { "id": id },
+            success: function (response) {                                
+                if (response.length > 0) {
+                    $('#empid').val(id);
+                    $('#editempfname').val(response[0].FirstName);
+                    $('#editemplname').val(response[0].LastName);
+                    $('#editempDept').val(response[0].Department).change;
+                    $('#editempaddr1').val(response[0].Address1);
+                    $('#editempaddr2').val(response[0].Address2);
+                    $('#editempcity').val(response[0].City);
+                    $('#editstate').val(response[0].State);
+                    $('#editempcountry').val(response[0].Country).change;
+                    $('#editempphone').val(response[0].Phone);
+                    $('#EmployeeEditModal').modal('show');
+                }
+            },
+            error: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function DeleteEmployeeRecord(id) {        
+        $.ajax({
+            url: "../../Employee/DeleteEmployee",
+            type: "GET",
+            data: { "id": id },
+            success: function (response) {              
+                alert("Delete Successfully");
+                setTimeout(function () {                    
+                }, 2000);
+                location.reload();
+               
+            },
+            error: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function InsertEmployee()
+    {      
+       var insertemployeedata =
+            {
+                "EmployeeId": 0,
+                "FirstName": $('#empfname').val(),
+                "LastName": $('#emplname').val(),
+                "Department": $('#empDept').val(),
+                "Address1": $('#empaddr1').val(),
+                "Address2": $('#empaddr2').val(),
+                "City": $('#empcity').val(),
+                "State": $('#empstate').val(),
+                "Country": $('#empcountry').val(),
+                "Phone": $('#empphone').val(),           
+        };
+
+        $.ajax({
+            url: "../../Employee/AddEditEmployee",
+            type: "POST",                        
+            data: JSON.stringify(insertemployeedata),
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            datatype: "Json",
+            success: function (data) {               
+                if (data != 0) {
+                    alert('New Assign Contact Inserted Successfully.');
+                    $('#newAssignContactModal').modal('hide');
+                    location.reload();
+                }
+                else {
+                    alert('Some Exception Occured While Inserting New Assign Contact.');
+                }
+            }
+        });
+
+    }
+
+    function UpdateEmployee(id) {
+        var insertemployeedata =
+        {
+            "EmployeeId": $('#empid').val(),
+            "FirstName": $('#editempfname').val(),
+            "LastName": $('#editemplname').val(),
+            "Department": $('#editempDept').val(),
+            "Address1": $('#editempaddr1').val(),
+            "Address2": $('#editempaddr2').val(),
+            "City": $('#editempcity').val(),
+            "State": $('#editstate').val(),
+            "Country": $('#editempcountry').val(),
+            "Phone": $('#editempphone').val(),
+        };
+
+        $.ajax({
+            url: "../../Employee/AddEditEmployee",
+            type: "POST",
+            data: JSON.stringify(insertemployeedata),
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            datatype: "Json",
+            success: function (data) {               
+                if (data != 0) {
+                    $('#empid').val(''),
+                    alert('New Assign Contact Updated Successfully.');
+                    $('#EmployeeEditModal').modal('hide');
+                    location.reload();
+
+                }
+                else {
+                    raiseErrorMsg('Some Exception Occured While Inserting New Assign Contact.');
+                }
+            }
+        });
+    }
+</script>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="EmployeeEditModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="EmpFirstName"><i><b>Edit Employee</i></b></h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="empfirstname">First Name</label>
+                            <input type="text" class="form-control" id="editempfname" aria-describedby="emailHelp" placeholder="Enter First Name">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="emplastname">Last Name</label>
+                            <input type="text" class="form-control" id="editemplname" aria-describedby="emailHelp" placeholder="Enter Last Name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Department</label>
+                            <select class="form-control" id="editempDept">
+                                <option>Fiance</option>
+                                <option>Software</option>
+                                <option>Hardware</option>
+                                <option>Office</option>
+                                <option>HR</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Address1</label>
+                            <input type="text" class="form-control" id="editempaddr1" aria-describedby="emailHelp" placeholder="Enter the Address1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Address2</label>
+                            <input type="text" class="form-control" id="editempaddr2" aria-describedby="emailHelp" placeholder="Enter the Address2">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">City</label>
+                            <input type="text" class="form-control" id="editempcity" aria-describedby="emailHelp" placeholder="Enter the City">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">State</label>
+                            <input type="text" class="form-control" id="editstate" aria-describedby="emailHelp" placeholder="Enter the State">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="exampleInputPassword1">Country</label>
+                            <select class="form-control" id="editempcountry">
+                                <option>India</option>
+                                <option>USA</option>
+                                <option>UK</option>
+                                <option>aaa</option>
+                                <option>bbbb</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-12 form-group">
+                            <label for="exampleInputPassword1">Phone</label>
+                            <input type="text" class="form-control" id="editempphone" aria-describedby="emailHelp" placeholder="Enter the Phone">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-row">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="UpdateEmployee()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
